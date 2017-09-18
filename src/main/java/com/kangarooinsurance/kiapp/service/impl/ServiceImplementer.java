@@ -3,6 +3,7 @@ package com.kangarooinsurance.kiapp.service.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kangarooinsurance.kiapp.model.Brand;
 import com.kangarooinsurance.kiapp.service.AppService;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.logging.LogLevel;
@@ -18,6 +19,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ServiceImplementer implements AppService {
@@ -30,6 +33,8 @@ public class ServiceImplementer implements AppService {
     private final static String HTTP_SECURE_WIRE_LOGGING = "http-secure-default-client";
     private final static String API_LEADS_PAGE_0 = "/api/leads/page/0";
     private static Logger logger;
+
+    public static List<Brand> brandList;
 
     @Override
     public void getHomeService() {
@@ -81,6 +86,11 @@ public class ServiceImplementer implements AppService {
             JsonObject brandJsonObject = jsonArray.get(2).getAsJsonObject();
             JsonArray brands = brandJsonObject.getAsJsonArray(VALUES);
             logger.info(brands.toString());
+
+            brandList = new ArrayList<>(brands.size());
+            for (int i = 0; i < brands.size(); i++) {
+                brandList.add(new Brand(brands.get(i).getAsJsonObject()));
+            }
         }
     }
 

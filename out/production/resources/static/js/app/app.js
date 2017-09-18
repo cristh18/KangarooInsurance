@@ -1,10 +1,5 @@
 var app = angular.module('kiApp',['ui.router']);
 
-app.constant('urls', {
-    BASE: 'http://localhost:8080/kiapp',
-    // USER_SERVICE_API : 'http://localhost:8080/kiapp/api/user/'
-});
-
 // app.config(['$stateProvider', '$urlRouterProvider',
 //     function($stateProvider, $urlRouterProvider) {
 //

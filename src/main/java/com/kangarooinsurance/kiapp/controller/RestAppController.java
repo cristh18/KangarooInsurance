@@ -3,6 +3,7 @@ package com.kangarooinsurance.kiapp.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kangarooinsurance.kiapp.model.Brand;
 import com.kangarooinsurance.kiapp.service.AppService;
+import com.kangarooinsurance.kiapp.service.impl.ServiceImplementer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,17 +33,19 @@ public class RestAppController {
         return brands;
     }
 
-    //    @RequestMapping("")
-//    public List<Brand> getBrands() {
-//        return appService.getHomeService();
-//    }
-
     /**
      * HTTP GET - Get all employees
      */
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<Brand>> getAllEmployeesJSON() {
-        List<Brand> brands = getBrands();
+//    @RequestMapping(value = "/kiapp", method = RequestMethod.GET)
+//    public ResponseEntity<List<Brand>> getAllEmployeesJSON() {
+//        List<Brand> brands = getBrands();
+//        return new ResponseEntity<>(brands, HttpStatus.OK);
+//    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<List<Brand>> getBrandsRFService() {
+//        List<Brand> brands = getBrands();
+        List<Brand> brands = ServiceImplementer.brandList;
         return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 

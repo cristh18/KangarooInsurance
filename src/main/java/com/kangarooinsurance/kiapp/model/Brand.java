@@ -17,8 +17,8 @@ public class Brand {
     }
 
     public Brand(JsonObject jsonObject) {
-        this.id = jsonObject.get(ID).toString();
-        this.value = jsonObject.get(VALUE).toString();
+        this.id = jsonObject.get(ID).getAsString();
+        this.value = jsonObject.get(VALUE).getAsString();
     }
 
     public String getId() {
