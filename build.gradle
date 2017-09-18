@@ -32,23 +32,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-jersey')
     compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-webflux')
-
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '2.0.0.M3'
-
-//    // https://mvnrepository.com/artifact/io.reactivex/rxnetty
-//    compile group: 'io.reactivex', name: 'rxnetty', version: '0.4.20'
-
-    // https://mvnrepository.com/artifact/io.reactivex/rxnetty-http
     compile group: 'io.reactivex', name: 'rxnetty-http', version: '0.5.2'
-//    // https://mvnrepository.com/artifact/io.reactivex/rxnetty-common
-//    compile group: 'io.reactivex', name: 'rxnetty-common', version: '0.5.2'
-//    // https://mvnrepository.com/artifact/io.reactivex/rxnetty-tcp
-//    compile group: 'io.reactivex', name: 'rxnetty-tcp', version: '0.5.2'
-//    // https://mvnrepository.com/artifact/io.reactivex/rxnetty-spectator
-//    compile group: 'io.reactivex', name: 'rxnetty-spectator', version: '0.5.1'
-
     compile 'com.google.code.gson:gson:2.8.1'
-
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('io.projectreactor:reactor-test')
 }
