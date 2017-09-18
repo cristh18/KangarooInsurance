@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kangarooinsurance.kiapp.model.Brand;
+import com.kangarooinsurance.kiapp.model.DefaultResponse;
 import com.kangarooinsurance.kiapp.service.AppService;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.logging.LogLevel;
@@ -17,6 +18,7 @@ import rx.schedulers.Schedulers;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
+import java.io.File;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -36,6 +38,12 @@ public class ServiceImplementer implements AppService {
 
     public static List<Brand> brandList;
 
+    public static List<DefaultResponse> yearList;
+
+    public static List<DefaultResponse> referenceList;
+
+
+    // Service impl
     @Override
     public void getHomeService() {
         logger = LoggerFactory.getLogger(getClass());
@@ -47,6 +55,21 @@ public class ServiceImplementer implements AppService {
                 .subscribe(aBoolean -> {
                 }, Throwable::printStackTrace);
     }
+
+    @Override
+    public void getBrandYears(String brand) {
+        String apiYears = "/api/leads/choices/year/".concat(brand);
+        readEndPoint(apiYears, false);
+    }
+
+    @Override
+    public void getReference(String brand, String year) {
+        String apiReference = "/api/leads/choices/model/".concat(brand).concat(File.separator).concat(year);
+        readEndPoint(apiReference, true);
+    }
+
+
+    // Mapper
 
     private void readEndPoint() {
 
@@ -67,6 +90,27 @@ public class ServiceImplementer implements AppService {
                 .flatMap(this::mapResponse)
                 .toBlocking()
                 .forEach(this::getBrands);
+    }
+
+    private void readEndPoint(String apiUrl, boolean reference) {
+
+
+        SSLEngine sslEngine = null;
+        try {
+            sslEngine = defaultSSLEngineForClient();
+        } catch (NoSuchAlgorithmException nsae) {
+            logger.error("Failed to create SSLEngine.", nsae);
+            System.exit(-1);
+        }
+
+        HttpClient.newClient(HOST, PORT)
+                .enableWireLogging(PROXY_WIRE_LOGGING, LogLevel.DEBUG)
+                .secure(sslEngine)
+                .createGet(apiUrl)
+                .doOnNext(resp -> logger.info(resp.toString()))
+                .flatMap(this::mapResponse)
+                .toBlocking()
+                .forEach(o -> getValues(o, reference));
     }
 
     private Observable<? extends String> mapResponse(HttpClientResponse<ByteBuf> resp) {
@@ -91,6 +135,27 @@ public class ServiceImplementer implements AppService {
             for (int i = 0; i < brands.size(); i++) {
                 brandList.add(new Brand(brands.get(i).getAsJsonObject()));
             }
+        }
+    }
+
+    private void getValues(String s, boolean reference) {
+        logger.info(s);
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = parser.parse(s).getAsJsonArray();
+
+        int size = jsonArray.size();
+
+        List<DefaultResponse> responses = new ArrayList<>(size);
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                responses.add(new DefaultResponse(jsonArray.get(i).getAsJsonObject()));
+            }
+        }
+
+        if (reference) {
+            referenceList = new ArrayList<>(responses);
+        } else {
+            yearList = new ArrayList<>(responses);
         }
     }
 

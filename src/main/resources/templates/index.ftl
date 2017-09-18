@@ -21,10 +21,20 @@
 
     <#--<h1>You selected: {{selectedCar}}</h1>-->
 
-        <div ng-repeat="(id,value) in cars">{{text}}</div>
-        <select ng-model="model.id" ng-options="car.id as car.value for car in cars" style="width: 150px;"></select>
+        <div ng-repeat="(id,value) in brands">{{text}}</div>
+        <select ng-model="brand.id" ng-options="brand.id as brand.value for brand in brands" ng-change="loadYearsByBrand(brand.id)" style="width: 150px;"></select>
 
-        {{model.id}}
+        {{brand.id}}
+
+        <div ng-repeat="(id,value) in years">{{text}}</div>
+        <select ng-model="year.id" ng-options="year.id as year.value for year in years" ng-change="loadReference(brand.id, year.id)" style="width: 150px;"></select>
+
+        {{year.id}}
+
+        <div ng-repeat="(id,value) in references">{{text}}</div>
+        <select ng-model="reference.id" ng-options="reference.id as reference.value for reference in references" style="width: 500px;"></select>
+
+        {{reference.id}}
 </div>
 
 </body>
