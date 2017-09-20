@@ -12,4 +12,9 @@ public class HomeController {
     public String home() {
         return "index";
     }
+
+    @RequestMapping(value = "/kiapp/list")
+    public String homeList() {
+        return "list";
+    }
 }

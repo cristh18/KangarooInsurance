@@ -1,5 +1,5 @@
 var myApp = angular.module('kiApp', []);
-myApp.controller('myCtrl', function ($scope, $http) {
+myApp.controller('myCtrl', function ($scope, $http, $window) {
     $scope.brands = [];
     $scope.years = [];
     $scope.references = [];
@@ -7,7 +7,7 @@ myApp.controller('myCtrl', function ($scope, $http) {
     loadPage();
 
     function loadPage() {
-        $http.get('/')
+        $http.get('/brands')
             .then(function (response) {
                 $scope.brands = response.data; //For multiple row
                 //$scope.persons[0] = response.data; //For single row
@@ -55,5 +55,21 @@ myApp.controller('myCtrl', function ($scope, $http) {
         }).finally(function () {
             console.log("Task Finished.");
         });
+    }
+
+    function sendVehicleData() {
+        $http.post('/vehicle')
+            .then(function (response) {
+                console.log("status:" + response.status);
+            }).catch(function (response) {
+            console.error('Error occurred:', response.status, response.data);
+        }).finally(function () {
+            console.log("Task Finished.");
+        });
+    }
+
+    $scope.submit = function () {
+        sendVehicleData();
+        $window.location.href = 'kiapp/list.html';
     }
 });
