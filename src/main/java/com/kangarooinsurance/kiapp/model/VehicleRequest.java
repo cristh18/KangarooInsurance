@@ -1,11 +1,12 @@
 package com.kangarooinsurance.kiapp.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class VehicleRequest implements Serializable{
+public class VehicleRequest implements Serializable {
 
     @SerializedName("referrer")
     @Expose
@@ -29,6 +30,25 @@ public class VehicleRequest implements Serializable{
         this.brand = brand;
         this.modelYear = modelYear;
         this.model = model;
+    }
+
+    public VehicleRequest(JsonObject jsonObject) {
+        init(jsonObject);
+    }
+
+    private void init(JsonObject jsonObject) {
+        if (jsonObject != null) {
+            String REFERRER = "referrer";
+            String PLATFORM = "platform";
+            String BRAND = "brand";
+            String MODEL_YEAR = "modelYear";
+            String MODEL = "model";
+            this.referrer = jsonObject.get(REFERRER).getAsString();
+            this.platform = jsonObject.get(PLATFORM).getAsString();
+            this.brand = jsonObject.get(BRAND).getAsString();
+            this.modelYear = jsonObject.get(MODEL_YEAR).getAsString();
+            this.model = jsonObject.get(MODEL).getAsString();
+        }
     }
 
     public String getReferrer() {

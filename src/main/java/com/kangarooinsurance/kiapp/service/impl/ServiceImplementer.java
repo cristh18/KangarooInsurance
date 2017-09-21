@@ -76,14 +76,14 @@ public class ServiceImplementer implements AppService {
 
         logger = LoggerFactory.getLogger(getClass());
 
-        Observable.just(true)
-                .doOnNext(aBoolean -> sendDataToEndPoint(API_LEADS_PAGE_0, vehicleRequest))
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(aBoolean -> {
-                }, Throwable::printStackTrace);
+//        Observable.just(true)
+//                .doOnNext(aBoolean -> sendDataToEndPoint(API_LEADS_PAGE_0, vehicleRequest))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(Schedulers.computation())
+//                .subscribe(aBoolean -> {
+//                }, Throwable::printStackTrace);
 
-//        sendDataToEndPoint(API_LEADS_PAGE_0, vehicleRequest);
+        sendDataToEndPoint(API_LEADS_PAGE_0, vehicleRequest);
     }
 
     // Mapper
@@ -191,6 +191,26 @@ public class ServiceImplementer implements AppService {
 //                .observeOn(Schedulers.io())
 //                .map(b -> Unpooled.copiedBuffer(b));
 
+        HttpClient.newClient(HOST, PORT)
+                .enableWireLogging("TMP", LogLevel.INFO)
+                .createPost(api)
+                .writeContent(Observable.just(getByteBuf(vehicleRequest)))
+                .onBackpressureBuffer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .flatMap(this::mapResponse)
+                .doOnNext(resp -> logger.info(resp.toString()))
+                .subscribe(o -> {
+                    logger.info(o);
+                    logger.info("PAPITAS");
+                }, Throwable::printStackTrace);
+    }
+
+    private ByteBuf getByteBuf(VehicleRequest vehicleRequest) {
+        return Unpooled.copiedBuffer(getBytes(vehicleRequest));
+    }
+
+    private byte[] getBytes(VehicleRequest vehicleRequest) {
         byte[] vehicleRequestBytes = new byte[0];
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -202,21 +222,6 @@ public class ServiceImplementer implements AppService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        ByteBuf buffer = Unpooled.copiedBuffer(vehicleRequestBytes);
-//        buffer = buffer.writeBytes(vehicleRequestBytes);
-
-        HttpClient.newClient(HOST, PORT)
-                .enableWireLogging(PROXY_WIRE_LOGGING, LogLevel.DEBUG)
-                .createPost(api)
-                .writeContent(Observable.just(buffer))
-                .doOnNext(resp -> logger.info(resp.toString()))
-                .flatMap(this::mapResponse)
-                .toBlocking()
-                .forEach(o -> {
-                    logger.info(o);
-                    System.out.println("PAPITAS!!");
-                });
+        return vehicleRequestBytes;
     }
 }

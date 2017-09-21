@@ -13,8 +13,8 @@ public class CallHomePageService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        appService.getHomeService();
-        VehicleRequest vehicleRequest = new VehicleRequest("Direct","computer","aleko","1993","00101001");
-        appService.sendVehicleData(vehicleRequest);
+        appService.getHomeService();
+//        VehicleRequest vehicleRequest = new VehicleRequest("Direct","computer","aleko","1993","00101001");
+//        appService.sendVehicleData(vehicleRequest);
     }
 }

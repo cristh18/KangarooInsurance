@@ -1,5 +1,7 @@
 package com.kangarooinsurance.kiapp.controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kangarooinsurance.kiapp.model.Brand;
 import com.kangarooinsurance.kiapp.model.DefaultResponse;
 import com.kangarooinsurance.kiapp.model.VehicleRequest;
@@ -37,8 +39,11 @@ public class RestAppController {
     }
 
     @RequestMapping(value = "/vehicle", method = RequestMethod.POST)
-    public int getBrandYearRFService(@RequestBody VehicleRequest vehicleRequest) {
-        vehicleRequest = new VehicleRequest("Direct","computer","aleko","1993","00101001");
+    @ResponseBody
+    public int sendVehicleData(@RequestBody String request) {
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(request).getAsJsonObject();
+        VehicleRequest vehicleRequest = new VehicleRequest(jsonObject);
         appService.sendVehicleData(vehicleRequest);
         return 200;
     }

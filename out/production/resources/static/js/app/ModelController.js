@@ -58,7 +58,18 @@ myApp.controller('myCtrl', function ($scope, $http, $window) {
     }
 
     function sendVehicleData() {
-        $http.post('/vehicle')
+        // $http.post('/vehicle')
+        $http({
+            method: 'POST',
+            url: '/vehicle',
+            data: {
+                referrer: 'Direct',
+                platform: 'computer',
+                brand: 'aleko',
+                modelYear: '1993',
+                model: '102345'
+            }
+        })
             .then(function (response) {
                 console.log("status:" + response.status);
             }).catch(function (response) {

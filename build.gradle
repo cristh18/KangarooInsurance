@@ -33,6 +33,10 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('io.reactivex:rxnetty-http:0.5.2')
 
+    // https://mvnrepository.com/artifact/org.wildfly.swarm/netflix-rxnetty
+//    compile group: 'org.wildfly.swarm', name: 'netflix-rxnetty', version: '2017.9.5'
+
+
 
 
     compile 'com.google.code.gson:gson:2.8.1'
